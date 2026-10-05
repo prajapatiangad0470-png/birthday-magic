@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Happy Birthday PNG Maker</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #ff3d6e;
+    margin-top: 0;
+}
+
+.controls {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+input, textarea, select, button {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+button {
+    background: #ff3d6e;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #e72d5b;
+}
+
+#preview {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    display: block;
+    border-radius: 15px;
+}
+
+.note {
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🎂 Happy Birthday PNG Maker 🎉</h1>
+
+<div class="controls">
+
+<input
+    type="text"
+    id="name"
+    placeholder="Enter Birthday Name"
+    value="Your Name"
+>
+
+<textarea
+    id="message"
+    placeholder="Enter your birthday message"
+>Wishing you a very Happy Birthday! 🎂🎉</textarea>
+
+<select id="theme">
+    <option value="pink">💗 Pink</option>
+    <option value="blue">💙 Blue</option>
+    <option value="purple">💜 Purple</option>
+    <option value="gold">💛 Gold</option>
+</select>
+
+<button onclick="generateBirthday()">
+    ✨ Generate Birthday PNG
+</button>
+
+<button onclick="downloadPNG()">
+    ⬇️ Download PNG
+</button>
+
+</div>
+
+<canvas id="preview" width="1200" height="800"></canvas>
+
+<p class="note">
+    Create your birthday design and download it as a PNG.
+</p>
+
+</div>
+
+<script>
+
+const canvas = document.getElementById("preview");
+const ctx = canvas.getContext("2d");
+
+function getTheme() {
+
+    const theme = document.getElementById("theme").value;
+
+    if (theme === "blue") {
+        return ["#2196f3", "#6dd5fa"];
+    }
+
+    if (theme === "purple") {
+        return ["#7b2ff7", "#f107a3"];
+    }
+
+    if (theme === "gold") {
+        return ["#f7971e", "#ffd200"];
+    }
+
+    return ["#ff4b7d", "#ff9a9e"];
+}
+
+function generateBirthday() {
+
+    const name =
+        document.getElementById("name").value || "Your Name";
+
+    const message =
+        document.getElementById("message").value ||
+        "Wishing you a very Happy Birthday!";
+
+    const colors = getTheme();
+
+    // Background
+    const gradient = ctx.createLinearGradient(
+        0, 0, canvas.width, canvas.height
+    );
+
+    gradient.addColorStop(0, colors[0]);
+    gradient.addColorStop(1, colors[1]);
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Decorative circles
+    for (let i = 0; i < 35; i++) {
+
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const size = 10 + Math.random() * 30;
+
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+
+        ctx.fillStyle =
+            "rgba(255,255,255,0.25)";
+
+        ctx.fill();
+    }
+
+    // Birthday emoji
+    ctx.textAlign = "center";
+
+    ctx.font = "100px Arial";
+    ctx.fillText("🎂", canvas.width / 2, 150);
+
+    // Happy Birthday
+    ctx.font = "bold 82px Arial";
+    ctx.fillStyle = "white";
+
+    ctx.shadowColor = "rgba(0,0,0,0.3)";
+    ctx.shadowBlur = 10;
+
+    ctx.fillText(
+        "HAPPY BIRTHDAY",
+        canvas.width / 2,
+        280
+    );
+
+    // Name
+    ctx.font = "bold 90px Arial";
+
+    ctx.fillStyle = "#fff700";
+
+    ctx.fillText(
+        name,
+        canvas.width / 2,
+        400
+    );
+
+    // Message
+    ctx.shadowBlur = 0;
+
+    ctx.font = "32px Arial";
+    ctx.fillStyle = "white";
+
+    const words = message.split(" ");
+    let line = "";
+    let y = 500;
+
+    for (let i = 0; i < words.length; i++) {
+
+        const testLine =
+            line + words[i] + " ";
+
+        const width =
+            ctx.measureText(testLine).width;
+
+        if (width > 900 && i > 0) {
+
+            ctx.fillText(
+                line,
+                canvas.width / 2,
+                y
+            );
+
+            line = words[i] + " ";
+            y += 45;
+
+        } else {
+
+            line = testLine;
+
+        }
+    }
+
+    ctx.fillText(
+        line,
+        canvas.width / 2,
+        y
+    );
+
+    // Bottom decoration
+    ctx.font = "45px Arial";
+
+    ctx.fillText(
+        "🎈 🎁 🎊 🎉 🎊 🎁 🎈",
+        canvas.width / 2,
+        700
+    );
+}
+
+function downloadPNG() {
+
+    const name =
+        document.getElementById("name").value
+        .trim()
+        .replace(/\s+/g, "_") || "birthday";
+
+    const link =
+        document.createElement("a");
+
+    link.download =
+        "Happy_Birthday_" + name + ".png";
+
+    link.href =
+        canvas.toDataURL("image/png");
+
+    link.click();
+}
+
+// Generate design when page opens
+generateBirthday();
+
+</script>
+
+</body>
+</html>
